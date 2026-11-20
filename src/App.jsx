@@ -6,7 +6,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Home from './components/Home';
 import BookList from './components/BookList';
@@ -99,6 +101,11 @@ export default function App() {
               bookId={screen.id}
               onSaved={() => setRefreshKey((k) => k + 1)}
             />
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
+              <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={goList}>
+                도서 목록으로 돌아가기
+              </Button>
+            </Box>
           </>
         )}
 
