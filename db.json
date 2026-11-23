@@ -1,7 +1,7 @@
 {
   "books": [
     {
-      "id": 1,
+      "id": "1",
       "title": "어린 왕자",
       "content": "사막에 불시착한 비행사가 작은 별에서 온 왕자를 만나며 어른들이 잊어버린 소중한 것들을 깨닫는 이야기.",
       "coverImageUrl": "",
@@ -9,7 +9,7 @@
       "updatedAt": "2026-11-20"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "별을 세는 밤",
       "content": "도시의 불빛을 피해 시골 마을로 내려간 소녀가 할머니와 함께 밤하늘의 별자리를 하나씩 이어가는 성장 이야기.",
       "coverImageUrl": "",
@@ -17,12 +17,21 @@
       "updatedAt": "2026-11-20"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "바다로 간 고래",
       "content": "수족관에서 태어난 아기 고래가 처음으로 넓은 바다를 만나 친구들과 모험을 떠나는 동화.",
       "coverImageUrl": "",
       "createdAt": "2026-11-20",
       "updatedAt": "2026-11-20"
+    },
+    {
+      "title": "감자튀김",
+      "content": "맛있다 진짜로",
+      "coverImageUrl": "",
+      "createdAt": "2026-11-23",
+      "updatedAt": "2026-11-23",
+      "id": "pD1JsuuBwlI"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

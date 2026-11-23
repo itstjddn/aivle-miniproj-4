@@ -19,6 +19,8 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import Home from './components/Home';
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
@@ -47,6 +49,16 @@ function BookApp() {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);   // 처음 목록을 불러오는 중인지
+
+  // 스낵바 (성공/실패 ui)
+  const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
+  const showToast = (message, severity = 'success') => {
+    setToast({ open: true, message, severity });
+  };
+  const closeToast = () => {
+    setToast((prev) => ({ ...prev, open: false }));
+  };
+
 
   // 도서 목록 불러오기
   const fetchBooks = async () => {
@@ -79,9 +91,10 @@ function BookApp() {
       const createdBook = await createBook(newBookData);
       setBooks((prev) => [...prev, createdBook]); 
       navigate('/books', { replace: true }); // replace: 뒤로가기 했을 때 폼으로 안 돌아가게. 히스토리 스택에 폼 있던 거 지우고 /books만 넣음.
+      showToast(`${createdBook.title} 도서가 등록되었습니다.`);
     } catch (err) {
       console.error(err);
-      alert('도서 등록에 실패했습니다.');
+      showToast('도서 등록에 실패했습니다', 'error');
     }
   };
 
@@ -93,9 +106,10 @@ function BookApp() {
         prev.map((p) => (p.id === id ? updatedBook : p)) 
       );
       navigate(`/books/${id}`, { replace: true });
+      showToast('도서 정보가 수정되었습니다.');
     } catch (err) {
       console.error(err);
-      alert('도서 수정에 실패했습니다.');
+      showToast('도서 정보 수정에 실패했습니다.', 'error');
     }
   };
 
@@ -105,9 +119,10 @@ function BookApp() {
       await deleteBook(id);
       setBooks((prev) => prev.filter((p) => p.id !== id)); 
       navigate('/books', { replace: true });
+      showToast('도서가 삭제되었습니다.');
     } catch (err) {
       console.error(err);
-      alert('도서 삭제에 실패했습니다.');
+      showToast('도서 삭제에 실패했습니다', 'error');
     }
   };
 
@@ -164,6 +179,18 @@ function BookApp() {
           <Route path="*" element={<Navigate to="/" replace />} />        {/* navigate(): 버튼 클릭 등 있어야, <Navigate/>: 그려지자마자 */}
         </Routes>
       </Container>
+
+      {/* 성공/실패 알림 : 화면 아래 가운데에 3초 동안 표시 */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={closeToast}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={closeToast} severity={toast.severity} variant="filled" sx={{ width: '100%' }}>
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

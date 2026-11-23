@@ -27,7 +27,7 @@ export default function BookDetail({ book, onBack, onEdit, onDelete }) {
 
       <Paper sx={{ p: { xs: 3, md: 4 } }}>
         {/* 제목 + 수정/삭제 버튼 */}
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack direction="row" sx={{ alignItems: 'center' }} spacing={2}>
           <Typography variant="h4" sx={{ fontWeight: 700, flexGrow: 1 }}>
             {book.title}
           </Typography>

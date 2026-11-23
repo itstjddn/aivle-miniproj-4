@@ -96,7 +96,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           fullWidth
         />
 
-        <Stack direction="row" spacing={1} justifyContent="flex-end">
+        <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
           <Button variant="outlined" color="inherit" onClick={onCancel}>
             취소
           </Button>

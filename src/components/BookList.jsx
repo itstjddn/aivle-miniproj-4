@@ -23,7 +23,7 @@ export default function BookList({ books, onSelectBook, onCreateClick }) {
   return (
     <Box>
       {/* 제목 + 등록 버튼 */}
-      <Stack direction="row" alignItems="center" sx={{ mb: 3 }}>
+      <Stack direction="row" sx={{ alignItems: 'center', mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
           도서 목록
         </Typography>
