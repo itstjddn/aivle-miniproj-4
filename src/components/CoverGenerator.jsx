@@ -30,9 +30,32 @@ export default function CoverGenerator({ book, onSaved }) {
   // setImageSrc(imageSrc), onSaved(imageSrc) 해야함
   const handleGenerateCover = async () => {
     try {
+        // api 키 확인
+        if(apiKey === ''){
+          setError('API Key를 입력해주세요')
+          return;
+        }
+
+        setLoading(true);
+        setError('');
+        const src = await generateCover(book, apiKey, quality);
+        setImageSrc(src);
+        onSaved(src);
 
     } catch (err) {
       console.error(err);
+
+      // 예외처리 
+      if(err.message.includes('401')){
+        setError('API Key를 확인해주세요')
+      }else if(err.message.includes('429')){
+        setError('요청이 많아요. 잠시 후 다시 시도해주세요')
+      }else{
+        setError('표지 생성에 실패했어요')
+      }
+
+    } finally {
+      setLoading(false);
     }
   }
 
