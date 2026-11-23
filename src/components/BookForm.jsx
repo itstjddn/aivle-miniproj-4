@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 export default function BookForm({ initialBook, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [coverImageUrl, setCoverImageUrl] = useState('');
+  // const [coverImageUrl, setCoverImageUrl] = useState('');
   // 입력칸 아래 빨간 에러 문구 (비어 있으면 에러 없음)
   const [errors, setErrors] = useState({ title: '', content: '' });
 
@@ -20,7 +20,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     if (initialBook) {
       setTitle(initialBook.title || '');
       setContent(initialBook.content || '');
-      setCoverImageUrl(initialBook.coverImageUrl || '');
+      //setCoverImageUrl(initialBook.coverImageUrl || '');
     } else {
       setTitle('');
       setContent('');
@@ -43,7 +43,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     onSubmit({
       title: title.trim(),
       content: content.trim(),
-      coverImageUrl: coverImageUrl.trim(),
+      //coverImageUrl: coverImageUrl.trim(),
     });
   };
 
@@ -84,14 +84,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           helperText={errors.content}
           multiline
           minRows={6}
-          fullWidth
-        />
-
-        <TextField
-          label="표지 이미지 URL (선택)"
-          placeholder="https://..."
-          value={coverImageUrl}
-          onChange={(e) => setCoverImageUrl(e.target.value)}
           fullWidth
         />
 

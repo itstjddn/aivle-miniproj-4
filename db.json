@@ -23,5 +23,6 @@
       "createdAt": "2026-11-20",
       "updatedAt": "2026-11-23"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
