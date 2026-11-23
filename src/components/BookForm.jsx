@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
+// 도서 등록 / 수정 폼
+// 요구사항: 제목·내용 입력 필드 / 유효성 검사(공백 금지) / 수정 시 기존 정보 자동 불러오기
+// props: initialBook(있으면 수정 모드), onSubmit(입력값), onCancel()
 export default function BookForm({ initialBook, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
+  // 입력칸 아래 빨간 에러 문구 (비어 있으면 에러 없음)
+  const [errors, setErrors] = useState({ title: '', content: '' });
 
+  // 수정 모드면 기존 정보 채우기, 등록 모드면 비우기
   useEffect(() => {
     if (initialBook) {
       setTitle(initialBook.title || '');
@@ -15,18 +26,19 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
       setContent('');
       setCoverImageUrl('');
     }
+    setErrors({ title: '', content: '' });
   }, [initialBook]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) {
-      alert('도서 제목을 입력해 주세요.');
-      return;
-    }
-    if (!content.trim()) {
-      alert('도서 내용을 입력해 주세요.');
-      return;
-    }
+
+    // 유효성 검사
+    const newErrors = {
+      title: title.trim() ? '' : '도서 제목을 입력해 주세요.',
+      content: content.trim() ? '' : '도서 내용을 입력해 주세요.',
+    };
+    setErrors(newErrors);
+    if (newErrors.title || newErrors.content) return;
 
     onSubmit({
       title: title.trim(),
@@ -36,50 +48,62 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
   };
 
   return (
-    <section className="book-form-section">
-      <h2>{initialBook ? '도서 수정' : '새 도서 등록'}</h2>
+    <Paper
+      component="form"
+      onSubmit={handleSubmit}
+      noValidate
+      sx={{ maxWidth: 720, mx: 'auto', p: { xs: 3, md: 5 } }}
+    >
+      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3, textAlign: 'center' }}>
+        {initialBook ? '도서 수정' : '새 도서 등록'}
+      </Typography>
 
-      <form onSubmit={handleSubmit} className="book-form">
-        <div>
-          <label htmlFor="book-title">제목</label>
-          <input
-            id="book-title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="도서 제목을 입력하세요"
-          />
-        </div>
+      <Stack spacing={3}>
+        <TextField
+          label="제목"
+          placeholder="도서 제목을 입력하세요"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setErrors((prev) => ({ ...prev, title: '' })); // 다시 입력하면 에러 지우기
+          }}
+          error={Boolean(errors.title)}
+          helperText={errors.title}
+          fullWidth
+        />
 
-        <div>
-          <label htmlFor="book-content">설명 / 줄거리</label>
-          <textarea
-            id="book-content"
-            rows={4}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="도서 설명을 입력하세요"
-          />
-        </div>
+        <TextField
+          label="설명 / 줄거리"
+          placeholder="도서 설명을 입력하세요 (AI 표지 생성에도 사용돼요)"
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+            setErrors((prev) => ({ ...prev, content: '' }));
+          }}
+          error={Boolean(errors.content)}
+          helperText={errors.content}
+          multiline
+          minRows={6}
+          fullWidth
+        />
 
-        <div>
-          <label htmlFor="book-cover">표지 이미지 URL</label>
-          <input
-            id="book-cover"
-            type="text"
-            value={coverImageUrl}
-            onChange={(e) => setCoverImageUrl(e.target.value)}
-            placeholder="이미지 URL (선택)"
-          />
-        </div>
+        <TextField
+          label="표지 이미지 URL (선택)"
+          placeholder="https://..."
+          value={coverImageUrl}
+          onChange={(e) => setCoverImageUrl(e.target.value)}
+          fullWidth
+        />
 
-        <div className="book-form-actions">
-          <button type="submit">{initialBook ? '수정 완료' : '등록하기'}</button>
-          <button type="button" onClick={onCancel}>
+        <Stack direction="row" spacing={1} justifyContent="flex-end">
+          <Button variant="outlined" color="inherit" onClick={onCancel}>
             취소
-          </button>
-        </div>
-      </form>
-    </section>
+          </Button>
+          <Button type="submit" variant="contained">
+            {initialBook ? '수정 완료' : '등록하기'}
+          </Button>
+        </Stack>
+      </Stack>
+    </Paper>
   );
 }
