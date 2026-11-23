@@ -1,5 +1,5 @@
 // AI 표지 생성
-// 요구사항: AI 이미지 생성 버튼 / 표지 미리보기 및 재생성 / 생성된 표지를 coverImageUrl로 저장(PATCH)
+// 요구사항: AI 이미지 생성 버튼 / 표지 미리보기 및 사용 확인 후 반영(PATCH)
 
 import { useState } from 'react';
 import Paper from '@mui/material/Paper';
@@ -11,51 +11,30 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { generateCover } from '../api/openai'; 
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { generateCover } from '../api/openai';
 
 //
 // props
 //   book     - 표지를 만들 책 객체 (title, content, id 사용)
-//   onSaved  - 표지 저장 성공 후 호출 onSaved(imageSrc) → App이 화면의 표지를 갱신
+//   onSaved  - 사용자가 표지 사용을 확정한 뒤 호출 onSaved(imageSrc) → App이 화면/DB 표지를 갱신
 export default function CoverGenerator({ book, onSaved }) {
   // ──────────────── state 값들 ───────────────────
-  const [apiKey, setApiKey] = useState('')
-  const [quality, setQuality] = useState('low')
-  const [imageSrc, setImageSrc] = useState('')
-  const [loading, setLoading] = useState(false)        // true면 버튼 비활성화 + '생성 중...' 표시
-  const [error, setError] = useState('')       // 내용이 있으면 빨간 에러 박스 표시
-
+  const [apiKey, setApiKey] = useState('');
+  const [quality, setQuality] = useState('low');
+  const [imageSrc, setImageSrc] = useState('');
+  const [loading, setLoading] = useState(false); // 표지 생성 중 여부
+  const [saving, setSaving] = useState(false); // 선택한 표지 반영/저장 중 여부
+  const [error, setError] = useState(''); // 내용이 있으면 빨간 에러 박스 표시
+  const [appliedMessage, setAppliedMessage] = useState(''); // 반영 완료 안내
 
   // ─────────────── AI 표지 생성 버튼을 누르면 실행되는 함수 ──────────────────
-  // setImageSrc(imageSrc), onSaved(imageSrc) 해야함
   const handleGenerateCover = async () => {
     try {
-        // api 키 확인
-        if(apiKey === ''){
-          setError('API Key를 입력해주세요')
-          return;
-        }
-
-        setLoading(true);
-        setError('');
-        const src = await generateCover(book, apiKey, quality);
-        setImageSrc(src);
-        onSaved(src);
 
     } catch (err) {
       console.error(err);
-
-      // 예외처리 
-      if(err.message.includes('401')){
-        setError('API Key를 확인해주세요')
-      }else if(err.message.includes('429')){
-        setError('요청이 많아요. 잠시 후 다시 시도해주세요')
-      }else{
-        setError('표지 생성에 실패했어요')
-      }
-
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -99,31 +78,56 @@ export default function CoverGenerator({ book, onSaved }) {
           </TextField>
         </Stack>
 
-        {/* error에 내용이 있을 때만 보임 */}
         {error && <Alert severity="error">{error}</Alert>}
+        {appliedMessage && <Alert severity="success">{appliedMessage}</Alert>}
 
         <Button
           variant="contained"
           color="secondary"
           size="large"
           onClick={handleGenerateCover}
-          disabled={loading}
+          disabled={loading || saving}
           startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <AutoAwesomeIcon />}
           sx={{ alignSelf: 'center', px: 4 }}
         >
           {loading ? '생성 중...' : book?.coverImageUrl ? '표지 다시 생성' : 'AI 표지 생성'}
         </Button>
-        {/* 생성된 표지 미리보기: imageSrc에 값이 있을 때만 */}
+
+        {/* 생성된 표지 미리보기 + 사용 여부 선택 */}
         {imageSrc && (
-          <Stack alignItems="center" spacing={1}>
+          <Stack
+            alignItems="center"
+            spacing={1.5}
+            sx={{ pt: 1, borderTop: '1px solid', borderColor: 'divider' }}
+          >
             <Typography variant="body2" color="text.secondary">
-              생성된 표지 미리보기
+              생성된 표지 미리보기 — 이 표지를 화면에 반영할까요?
             </Typography>
             <img
               src={imageSrc}
-              alt={`${book?.title ?? '도서'} AI 표지`}
+              alt={`${book?.title ?? '도서'} AI 표지 미리보기`}
               style={{ width: 200, aspectRatio: '2 / 3', objectFit: 'cover', borderRadius: 8 }}
             />
+            <Stack direction="row" spacing={1.5}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleApplyCover}
+                disabled={saving || loading}
+                startIcon={saving ? <CircularProgress size={16} color="inherit" /> : <CheckIcon />}
+              >
+                {saving ? '반영 중...' : '이 표지 사용하기'}
+              </Button>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleDiscardCover}
+                disabled={saving || loading}
+                startIcon={<CloseIcon />}
+              >
+                사용 안 함
+              </Button>
+            </Stack>
           </Stack>
         )}
       </Stack>
