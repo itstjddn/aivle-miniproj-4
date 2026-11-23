@@ -34,7 +34,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
 
     // 유효성 검사
     const newErrors = {
-      
       title: !title.trim() ? '도서 제목을 입력해 주세요.' : title.trim().length > 50 ? '제목은 50자 이하로 입력해 주세요.' : '',
       content: !content.trim() ? '도서 내용을 입력해 주세요.' : content.trim().length > 1000 ? '내용은 1000자 이하로 입력해 주세요.' : ''
     };
