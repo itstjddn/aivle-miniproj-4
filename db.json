@@ -19,16 +19,7 @@
       "title": "바다로 간 고래",
       "content": "수족관에서 태어난 아기 고래가 처음으로 넓은 바다를 만나 친구들과 모험을 떠나는 동화.",
       "createdAt": "2026-11-20",
-      "updatedAt": "2026-11-20"
-    },
-    {
-      "title": "감자튀김",
-      "content": "맛있다 진짜로",
-      "coverImageUrl": "",
-      "createdAt": "2026-11-23",
-      "updatedAt": "2026-11-23",
-      "id": "pD1JsuuBwlI"
+      "updatedAt": "2026-11-23"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

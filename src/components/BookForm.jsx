@@ -6,12 +6,11 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 // 도서 등록 / 수정 폼
-// 요구사항: 제목·내용 입력 필드 / 유효성 검사(공백 금지) / 수정 시 기존 정보 자동 불러오기
+// 요구사항: 제목·내용 입력 필드 / 유효성 검사(공백 금지, 글자 수 입력 제한) / 수정 시 기존 정보 자동 불러오기
 // props: initialBook(있으면 수정 모드), onSubmit(입력값), onCancel()
 export default function BookForm({ initialBook, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [coverImageUrl, setCoverImageUrl] = useState('');
   // 입력칸 아래 빨간 에러 문구 (비어 있으면 에러 없음)
   const [errors, setErrors] = useState({ title: '', content: '' });
 
@@ -20,11 +19,9 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     if (initialBook) {
       setTitle(initialBook.title || '');
       setContent(initialBook.content || '');
-      setCoverImageUrl(initialBook.coverImageUrl || '');
     } else {
       setTitle('');
       setContent('');
-      setCoverImageUrl('');
     }
     setErrors({ title: '', content: '' });
   }, [initialBook]);
@@ -44,7 +41,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     onSubmit({
       title: title.trim(),
       content: content.trim(),
-      coverImageUrl: coverImageUrl.trim(),
     });
   };
 
@@ -87,14 +83,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           slotProps={{ htmlInput: { maxLength: 1000 } }} // 1000자 넘어가면 입력 막기
           multiline
           minRows={6}
-          fullWidth
-        />
-
-        <TextField
-          label="표지 이미지 URL (선택)"
-          placeholder="https://..."
-          value={coverImageUrl}
-          onChange={(e) => setCoverImageUrl(e.target.value)}
           fullWidth
         />
 
