@@ -6,12 +6,11 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 // 도서 등록 / 수정 폼
-// 요구사항: 제목·내용 입력 필드 / 유효성 검사(공백 금지) / 수정 시 기존 정보 자동 불러오기
+// 요구사항: 제목·내용 입력 필드 / 유효성 검사(공백 금지, 글자 수 입력 제한) / 수정 시 기존 정보 자동 불러오기
 // props: initialBook(있으면 수정 모드), onSubmit(입력값), onCancel()
 export default function BookForm({ initialBook, onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  // const [coverImageUrl, setCoverImageUrl] = useState('');
   // 입력칸 아래 빨간 에러 문구 (비어 있으면 에러 없음)
   const [errors, setErrors] = useState({ title: '', content: '' });
 
@@ -20,7 +19,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     if (initialBook) {
       setTitle(initialBook.title || '');
       setContent(initialBook.content || '');
-      //setCoverImageUrl(initialBook.coverImageUrl || '');
     } else {
       setTitle('');
       setContent('');
@@ -34,8 +32,9 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
 
     // 유효성 검사
     const newErrors = {
-      title: title.trim() ? '' : '도서 제목을 입력해 주세요.',
-      content: content.trim() ? '' : '도서 내용을 입력해 주세요.',
+      // 제목 50자 이하, 내용 1000자 이하 입력 제한
+      title: !title.trim() ? '도서 제목을 입력해 주세요.' : title.trim().length > 50 ? '제목은 50자 이하로 입력해 주세요.' : '',
+      content: !content.trim() ? '도서 내용을 입력해 주세요.' : content.trim().length > 1000 ? '내용은 1000자 이하로 입력해 주세요.' : ''
     };
     setErrors(newErrors);
     if (newErrors.title || newErrors.content) return;
@@ -64,11 +63,12 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 제목을 입력하세요"
           value={title}
           onChange={(e) => {
-            setTitle(e.target.value);
+            setTitle(e.target.value.slice(0, 50)); // 글자 50자 제한
             setErrors((prev) => ({ ...prev, title: '' })); // 다시 입력하면 에러 지우기
           }}
           error={Boolean(errors.title)}
-          helperText={errors.title}
+          helperText={errors.title || `${title.length} / 50`} // 제목 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 50 } }} // 50자 넘어가면 입력 막기
           fullWidth
         />
 
@@ -77,11 +77,12 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 설명을 입력하세요 (AI 표지 생성에도 사용돼요)"
           value={content}
           onChange={(e) => {
-            setContent(e.target.value);
+            setContent(e.target.value.slice(0, 1000)); // 1000자 제한
             setErrors((prev) => ({ ...prev, content: '' }));
           }}
           error={Boolean(errors.content)}
-          helperText={errors.content}
+          helperText={errors.content || `${content.length} / 1000`} // 내용 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 1000 } }} // 1000자 넘어가면 입력 막기
           multiline
           minRows={6}
           fullWidth
