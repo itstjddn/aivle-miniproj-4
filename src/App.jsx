@@ -42,7 +42,7 @@ export default function App() {
   );
 }
 
-// ──────────────── CRUD 기능 ──────────────────────
+// ──────────────── CRUD 기능 & 라우팅 ──────────────────────
 function BookApp() {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
@@ -90,7 +90,7 @@ function BookApp() {
     try {
       const updatedBook = await updateBook(id, updatedFields);
       setBooks((prev) =>
-        prev.map((b) => (b.id === id ? updatedBook : b)) 
+        prev.map((p) => (p.id === id ? updatedBook : p)) 
       );
       navigate(`/books/${id}`, { replace: true });
     } catch (err) {
@@ -103,7 +103,7 @@ function BookApp() {
   const handleDeleteBook = async (id) => {
     try {
       await deleteBook(id);
-      setBooks((prev) => prev.filter((b) => b.id !== id)); 
+      setBooks((prev) => prev.filter((p) => p.id !== id)); 
       navigate('/books', { replace: true });
     } catch (err) {
       console.error(err);
@@ -114,12 +114,12 @@ function BookApp() {
   // AI 표지 저장 후 -> 화면의 해당 책 표지만 바꾸기
   const handleCoverSaved = (id, imageSrc) => {
     setBooks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, coverImageUrl: imageSrc } : b))
+      prev.map((p) => (p.id === id ? { ...p, coverImageUrl: imageSrc } : p))
     );
   };
 
   // 주소의 id(문자열)로 books에서 책 찾기
-  const findBook = (id) => books.find((b) => String(b.id) === String(id));
+  const findBook = (id) => books.find((book) => String(book.id) === String(id));
 
 
   // 화면 주소(URL)
