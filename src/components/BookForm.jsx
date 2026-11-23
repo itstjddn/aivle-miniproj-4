@@ -65,7 +65,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 제목을 입력하세요"
           value={title}
           onChange={(e) => {
-            setTitle(e.target.value);
+            setTitle(e.target.value.slice(0, 50)); // 글자 50자 제한
             setErrors((prev) => ({ ...prev, title: '' })); // 다시 입력하면 에러 지우기
           }}
           error={Boolean(errors.title)}
@@ -79,7 +79,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 설명을 입력하세요 (AI 표지 생성에도 사용돼요)"
           value={content}
           onChange={(e) => {
-            setContent(e.target.value);
+            setContent(e.target.value.slice(0, 1000)); // 1000자 제한
             setErrors((prev) => ({ ...prev, content: '' }));
           }}
           error={Boolean(errors.content)}
