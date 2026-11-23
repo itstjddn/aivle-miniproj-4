@@ -70,6 +70,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           }}
           error={Boolean(errors.title)}
           helperText={errors.title || `${title.length} / 50`} // 제목 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 50 } }} // 50자 넘어가면 입력 막기
           fullWidth
         />
 
@@ -83,6 +84,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           }}
           error={Boolean(errors.content)}
           helperText={errors.content || `${content.length} / 1000`} // 내용 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 1000 } }} // 1000자 넘어가면 입력 막기
           multiline
           minRows={6}
           fullWidth
