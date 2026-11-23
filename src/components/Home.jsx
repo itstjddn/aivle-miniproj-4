@@ -20,7 +20,7 @@ export default function Home({ onGoList, onGoCreate }) {
         도서를 등록하고 관리해 보세요. AI가 책 내용에 어울리는 표지도 만들어 드려요.
       </Typography>
 
-      <Stack direction="row" spacing={2} justifyContent="center">
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
         <Button variant="contained" size="large" onClick={onGoList}>
           도서 목록 보기
         </Button>
