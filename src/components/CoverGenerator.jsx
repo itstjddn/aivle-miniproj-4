@@ -32,13 +32,62 @@ export default function CoverGenerator({ book, onSaved }) {
   // ─────────────── AI 표지 생성 버튼을 누르면 실행되는 함수 ──────────────────
   const handleGenerateCover = async () => {
     try {
+      const trimmedKey = apiKey.trim();
+      if (trimmedKey === '') {
+        setError('API Key를 입력해주세요');
+        return;
+      }
+      if (!/^[\x20-\x7E]+$/.test(trimmedKey)) {
+        setError('API Key에 한글이나 허용되지 않는 문자가 포함되어 있습니다.');
+        return;
+      }
 
+      setLoading(true);
+      setError('');
+      setAppliedMessage('');
+
+      const src = await generateCover(book, trimmedKey, quality);
+      // 바로 반영하지 않고 미리보기용 state에만 저장
+      setImageSrc(src);
     } catch (err) {
       console.error(err);
+      if (err.message?.includes('401')) {
+        setError('API Key를 확인해주세요');
+      } else if (err.message?.includes('429')) {
+        setError('요청이 많아요. 잠시 후 다시 시도해주세요');
+      } else {
+        setError('표지 생성에 실패했어요');
+      }
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
+  // ─────────────── 생성된 표지 사용 확정 → 화면 반영 ──────────────────
+  const handleApplyCover = async () => {
+    if (!imageSrc) return;
 
+    const confirmed = window.confirm('생성된 이 표지를 도서에 적용하시겠습니까?');
+    if (!confirmed) return;
+
+    try {
+      setSaving(true);
+      setError('');
+      await onSaved(imageSrc);
+      setAppliedMessage('생성된 표지가 도서에 반영되었습니다.');
+    } catch (err) {
+      console.error(err);
+      setError('표지를 반영하는 데 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // ─────────────── 미리보기 취소(사용 안 함) ──────────────────
+  const handleDiscardCover = () => {
+    setImageSrc('');
+    setAppliedMessage('');
+  };
 
   // ───────────── 화면 레이아웃 ───────────────
   return (
