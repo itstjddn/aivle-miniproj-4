@@ -34,8 +34,9 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
 
     // 유효성 검사
     const newErrors = {
-      title: title.trim() ? '' : '도서 제목을 입력해 주세요.',
-      content: content.trim() ? '' : '도서 내용을 입력해 주세요.',
+      // 제목 50자 이하, 내용 1000자 이하 입력 제한
+      title: !title.trim() ? '도서 제목을 입력해 주세요.' : title.trim().length > 50 ? '제목은 50자 이하로 입력해 주세요.' : '',
+      content: !content.trim() ? '도서 내용을 입력해 주세요.' : content.trim().length > 1000 ? '내용은 1000자 이하로 입력해 주세요.' : ''
     };
     setErrors(newErrors);
     if (newErrors.title || newErrors.content) return;
@@ -64,11 +65,12 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 제목을 입력하세요"
           value={title}
           onChange={(e) => {
-            setTitle(e.target.value);
+            setTitle(e.target.value.slice(0, 50)); // 글자 50자 제한
             setErrors((prev) => ({ ...prev, title: '' })); // 다시 입력하면 에러 지우기
           }}
           error={Boolean(errors.title)}
-          helperText={errors.title}
+          helperText={errors.title || `${title.length} / 50`} // 제목 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 50 } }} // 50자 넘어가면 입력 막기
           fullWidth
         />
 
@@ -77,11 +79,12 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           placeholder="도서 설명을 입력하세요 (AI 표지 생성에도 사용돼요)"
           value={content}
           onChange={(e) => {
-            setContent(e.target.value);
+            setContent(e.target.value.slice(0, 1000)); // 1000자 제한
             setErrors((prev) => ({ ...prev, content: '' }));
           }}
           error={Boolean(errors.content)}
-          helperText={errors.content}
+          helperText={errors.content || `${content.length} / 1000`} // 내용 입력 글자 수 표시
+          slotProps={{ htmlInput: { maxLength: 1000 } }} // 1000자 넘어가면 입력 막기
           multiline
           minRows={6}
           fullWidth
@@ -95,7 +98,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
           fullWidth
         />
 
-        <Stack direction="row" spacing={1} justifyContent="flex-end">
+        <Stack direction="row" spacing={1} sx={{ justifyContent: 'flex-end' }}>
           <Button variant="outlined" color="inherit" onClick={onCancel}>
             취소
           </Button>
