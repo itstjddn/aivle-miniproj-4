@@ -34,6 +34,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
 
     // 유효성 검사
     const newErrors = {
+      // 제목 50자 이하, 내용 1000자 이하 입력 제한
       title: !title.trim() ? '도서 제목을 입력해 주세요.' : title.trim().length > 50 ? '제목은 50자 이하로 입력해 주세요.' : '',
       content: !content.trim() ? '도서 내용을 입력해 주세요.' : content.trim().length > 1000 ? '내용은 1000자 이하로 입력해 주세요.' : ''
     };
@@ -68,7 +69,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
             setErrors((prev) => ({ ...prev, title: '' })); // 다시 입력하면 에러 지우기
           }}
           error={Boolean(errors.title)}
-          helperText={errors.title}
+          helperText={errors.title || `${title.length} / 50`} // 제목 입력 글자 수 표시
           fullWidth
         />
 
@@ -81,7 +82,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
             setErrors((prev) => ({ ...prev, content: '' }));
           }}
           error={Boolean(errors.content)}
-          helperText={errors.content}
+          helperText={errors.content || `${content.length} / 1000`} // 내용 입력 글자 수 표시
           multiline
           minRows={6}
           fullWidth
