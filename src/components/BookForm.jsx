@@ -22,7 +22,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     } else {
       setTitle('');
       setContent('');
-      setCoverImageUrl('');
     }
     setErrors({ title: '', content: '' });
   }, [initialBook]);
@@ -42,7 +41,6 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
     onSubmit({
       title: title.trim(),
       content: content.trim(),
-      //coverImageUrl: coverImageUrl.trim(),
     });
   };
 
