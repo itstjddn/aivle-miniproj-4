@@ -31,7 +31,7 @@ export default function CoverGenerator({ book, onSaved }) {
   const handleGenerateCover = async () => {
     try {
         // api 키 확인
-        if(apiKey.trim() === ''){
+        if(apiKey === ''){
           setError('API Key를 입력해주세요')
           return;
         }
