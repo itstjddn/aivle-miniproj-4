@@ -18,7 +18,7 @@ export async function getBook(id) {
 
 // 신규 등록 - POST /books
 export async function createBook(book) {
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
+  const today = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD 형식
   const newBook = {
     ...book,
     createdAt: book.createdAt || today,
@@ -36,7 +36,7 @@ export async function createBook(book) {
 
 // 수정 - PATCH /books/:id
 export async function updateBook(id, fields) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString('sv-SE');
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

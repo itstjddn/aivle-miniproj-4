@@ -67,7 +67,7 @@ src/
 | 이름 | 역할 | 담당 파일 |
 |---|---|---|
 | 김채민 | 조장, 타임키퍼, PM | `README.md` |
-| 전소연 | PPT 제작, 스타일링, UI 레이아웃 | `App.jsx`, `App.css` |
+| 전소연 | PPT 제작, 스타일링, UI 레이아웃 | `App.jsx`, `theme.js`, `App.css` |
 | 장표권 | 서기, 검토 담당, CRUD | `api/books.js`, `BookList.jsx`, `BookDetail.jsx`, `BookForm.jsx` |
 | 김성우 | 발표, OpenAI 연동, 데모 시연 | `api/openai.js`, `CoverGenerator.jsx` |
 
