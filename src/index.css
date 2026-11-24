@@ -1,10 +1,26 @@
+/* 🎄 글꼴: 영어 필기체 Great Vibes / 한글 제목 Song Myung / 본문 Gowun Batang
+   (Google Fonts, 설치 없이 인터넷으로 불러옴) */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Great+Vibes&family=Song+Myung&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
+html {
+  background-color: #4e0e17;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, 'Segoe UI', 'Malgun Gothic', sans-serif;
-  color: #222;
-  background: #fafafa;
+  font-family: 'Gowun Batang', 'Nanum Myeongjo', 'Segoe UI', 'Malgun Gothic', sans-serif;
+  color: #2a1e1a;
+  /* 와인 레드 배경 + 위쪽 은은한 금빛 + 아주 옅은 사선 무늬 */
+  background-color: #4e0e17;
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(201, 165, 92, 0.18) 0%, rgba(201, 165, 92, 0) 55%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 14px),
+    linear-gradient(180deg, #7a1622 0%, #5c111b 50%, #4e0e17 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
 }

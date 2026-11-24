@@ -21,14 +21,14 @@ export default function BookDetail({ book, onBack, onEdit, onDelete }) {
 
   return (
     <Box>
-      <Button startIcon={<ArrowBackIcon />} onClick={onBack} sx={{ mb: 2 }}>
+      <Button startIcon={<ArrowBackIcon />} onClick={onBack} sx={{ mb: 2, color: '#F3E9E4' }}>
         목록으로
       </Button>
 
       <Paper sx={{ p: { xs: 3, md: 4 } }}>
         {/* 제목 + 수정/삭제 버튼 */}
         <Stack direction="row" sx={{ alignItems: 'center' }} spacing={2}>
-          <Typography variant="h4" sx={{ fontWeight: 700, flexGrow: 1 }}>
+          <Typography variant="h4" sx={{ flexGrow: 1 }}>
             {book.title}
           </Typography>
           <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
@@ -51,13 +51,13 @@ export default function BookDetail({ book, onBack, onEdit, onDelete }) {
         {/* 표지(왼쪽) + 내용(오른쪽) — 모바일에서는 위아래로 */}
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 4 }}>
           <Box
-            sx={{ width: { xs: '100%', sm: 260 }, flexShrink: 0, borderRadius: 2, overflow: 'hidden' }}
+            sx={{ width: { xs: '100%', sm: 260 }, flexShrink: 0, borderRadius: 1, overflow: 'hidden', boxShadow: '0 10px 24px rgba(20,0,5,0.35)' }}
           >
             <BookCover src={book.coverImageUrl} title={book.title} />
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
+            <Typography variant="h6" sx={{ mb: 1.5, color: 'primary.main' }}>
               책 내용
             </Typography>
             <Typography variant="body1" sx={{ lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>

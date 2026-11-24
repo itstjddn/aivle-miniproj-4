@@ -24,10 +24,10 @@ export default function BookList({ books, onSelectBook, onCreateClick }) {
     <Box>
       {/* 제목 + 등록 버튼 */}
       <Stack direction="row" sx={{ alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, flexGrow: 1 }}>
+        <Typography variant="h5" sx={{ flexGrow: 1, color: '#F3E9E4' }}>
           도서 목록
         </Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={onCreateClick}>
+        <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={onCreateClick}>
           도서 등록
         </Button>
       </Stack>
@@ -41,9 +41,9 @@ export default function BookList({ books, onSelectBook, onCreateClick }) {
         />
       {books.length === 0 ? (
         // 책이 하나도 없을 때
-        <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
+        <Box sx={{ textAlign: 'center', py: 8, color: '#F3E9E4' }}>
           <Typography sx={{ mb: 2 }}>등록된 도서가 없습니다.</Typography>
-          <Button variant="outlined" onClick={onCreateClick}>
+          <Button variant="contained" onClick={onCreateClick}>
             첫 도서 등록하기
           </Button>
         </Box>
