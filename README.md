@@ -8,6 +8,7 @@ KT AIVLE School 미니프로젝트 4차 Frontend — 도서를 등록·조회·�
 * **전소연 (UI·PPT):** MUI 레이아웃·테마(`theme.js`), 라우팅 및 스낵바 피드백, 발표 자료 구성
 * **장표권 (서기·CRUD):** 환경 세팅 및 CRUD 기능·테스트, `db.json` 정리, 표지 미리보기 후 반영 기능
 * **김성우 (발표·AI):** `api/openai.js` 표지 생성, `CoverGenerator` 표지 생성 처리(로딩 · 에러 안내), 글자 수 제한 및 제목 검색 기능 구현, 시연·발표
+
 ## ✨ 주요 기능
 
 * **도서 목록:** 표지 · 제목 · 등록일 카드 그리드(화면 폭에 따라 1~4열 반응형), 표지가 없으면 기본 표지(`BookCover`, "표지 없음") 표시
@@ -16,7 +17,7 @@ KT AIVLE School 미니프로젝트 4차 Frontend — 도서를 등록·조회·�
 * **도서 상세:** 표지 · 본문 · 등록일 · 수정일(수정한 적이 있을 때) 표시
 * **도서 수정:** 기존 정보 자동 입력, 저장 후 상세 화면에 즉시 반영
 * **도서 삭제:** 삭제 전 확인창(`window.confirm`) 제공, 확인 시 목록에서 즉시 제거
-* **AI 표지 생성:** API Key(빈 값·한글 등 허용되지 않는 문자 포함 시 안내) · 품질(Low / Medium / High) 선택 → 제목·내용 기반 한글 프롬프트로 표지 생성(`b64_json` → Data URL 변환) 후 `coverImageUrl`에 `PATCH` 저장 → 미리보기 → "이 표지 사용하기"를 누르면 목록·상세 화면에 반영 (401 · 429 등 에러 안내 포함)
+* **AI 표지 생성:** API Key(빈 값·한글 등 허용되지 않는 문자 포함 시 안내) · 품질(Low / Medium / High) 선택 → 제목·내용 기반 한글 프롬프트로 표지 생성(`b64_json` → Data URL 변환) → 미리보기 → "이 표지 사용하기"를 누르면 확인 후 `coverImageUrl`에 `PATCH` 저장 및 목록·상세 화면에 반영, "사용 안 함"을 누르면 저장하지 않고 미리보기만 닫기 (401 · 429 등 에러 안내 포함)
 * **알림:** 등록 · 수정 · 삭제 결과를 화면 하단 스낵바로 안내 (목록 불러오기 실패는 `alert`)
 * **화면 주소:** 화면마다 URL(`/`, `/books`, `/books/new`, `/books/:id`, `/books/:id/edit`)이 있어 브라우저 뒤로가기 · 새로고침 시에도 보던 화면 유지
 
@@ -53,7 +54,7 @@ KT AIVLE School 미니프로젝트 4차 Frontend — 도서를 등록·조회·�
 ```
 
 * `id` : `json-server`가 등록 시 자동 부여
-* `coverImageUrl` : 처음에는 없고, AI 표지를 생성하면 Data URL(이미지 데이터 자체) 형태로 저장
+* `coverImageUrl` : 처음에는 없고, 생성한 AI 표지를 "이 표지 사용하기"로 확정하면 Data URL(이미지 데이터 자체) 형태로 저장
 * `createdAt` / `updatedAt` : 등록 · 수정 시 오늘 날짜(`YYYY-MM-DD`) 자동 입력
 
 ### 2. API 엔드포인트 (데이터 서버: `http://localhost:3000`)
@@ -64,7 +65,7 @@ KT AIVLE School 미니프로젝트 4차 Frontend — 도서를 등록·조회·�
 | 상세 조회 | GET | `/books/:id` | `api/books.js` `getBook` — 함수는 준비되어 있으나, 현재 상세 화면은 이미 불러온 목록(state)에서 도서를 찾아 표시 |
 | 신규 등록 | POST | `/books` | `api/books.js` `createBook` — 새 도서 추가 (id 자동 생성) |
 | 도서 수정 | PATCH | `/books/:id` | `api/books.js` `updateBook` — 제목 · 내용 · 수정일 변경 |
-| AI 표지 저장 | PATCH | `/books/:id` | `api/openai.js` `generateCover` — `coverImageUrl`만 저장 |
+| AI 표지 저장 | PATCH | `/books/:id` | `api/books.js` `updateBook` — "이 표지 사용하기"를 누르면 `CoverGenerator`에서 호출, `coverImageUrl` 저장 |
 | 도서 삭제 | DELETE | `/books/:id` | `api/books.js` `deleteBook` — 도서 데이터 삭제 |
 | 표지 생성 요청 | POST | `https://api.openai.com/v1/images/generations` | `api/openai.js` `generateCover` — OpenAI 이미지 생성 API |
 
@@ -86,7 +87,7 @@ KT AIVLE School 미니프로젝트 4차 Frontend — 도서를 등록·조회·�
 * **폴더 구조:**
   ```text
   src/
-  ├── api/          # books.js (CRUD), openai.js (표지 생성 + coverImageUrl PATCH)
+  ├── api/          # books.js (CRUD), openai.js (표지 생성 → Data URL 반환)
   ├── components/   # Home, BookList, BookCover, BookDetail, BookForm, CoverGenerator
   ├── theme.js      # MUI 테마 (색상 · 폰트 · 모서리)
   ├── App.jsx       # 도서 state · CRUD · 라우팅 · 스낵바
