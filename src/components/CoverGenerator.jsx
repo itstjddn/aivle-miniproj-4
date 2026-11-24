@@ -94,7 +94,7 @@ export default function CoverGenerator({ book, onSaved }) {
   // ───────────── 화면 레이아웃 ───────────────
   return (
     <Paper sx={{ p: { xs: 3, md: 4 }, mt: 3 }}>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+      <Typography variant="h6" sx={{ mb: 0.5, color: 'secondary.main' }}>
         AI 표지 생성
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -147,9 +147,8 @@ export default function CoverGenerator({ book, onSaved }) {
         {/* 생성된 표지 미리보기 + 사용 여부 선택 */}
         {imageSrc && (
           <Stack
-            alignItems="center"
             spacing={1.5}
-            sx={{ pt: 1, borderTop: '1px solid', borderColor: 'divider' }}
+            sx={{ alignItems: 'center', pt: 1, borderTop: '1px solid', borderColor: 'divider' }}
           >
             <Typography variant="body2" color="text.secondary">
               생성된 표지 미리보기 — 이 표지를 화면에 반영할까요?

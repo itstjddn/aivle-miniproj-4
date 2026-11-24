@@ -18,7 +18,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Home from './components/Home';
@@ -27,7 +26,7 @@ import BookDetail from './components/BookDetail';
 import BookForm from './components/BookForm';
 import CoverGenerator from './components/CoverGenerator';
 import { getBooks, createBook, updateBook, deleteBook } from './api/books';
-import theme from './theme';
+import theme, { GOLD, GOLD_LIGHT } from './theme';
 import './App.css';
 
 
@@ -41,6 +40,41 @@ export default function App() {
         <BookApp />
       </BrowserRouter>
     </ThemeProvider>
+  );
+}
+
+// ──────────────── 🎄 배경에서 반짝이는 금색 장식 ──────────────────────
+// 위치·크기·속도를 미리 정해둔 배열 (렌더링할 때마다 바뀌지 않게 컴포넌트 밖에 둠)
+const SPARKLES = Array.from({ length: 36 }, (_, i) => ({
+  left: (i * 41 + 7) % 100,             // 가로 위치 (%)
+  top: (i * 67 + 13) % 100,             // 세로 위치 (%)
+  size: 3 + ((i * 7) % 6),              // 크기 (px)
+  duration: 1.6 + ((i * 3) % 5) * 0.5,  // 반짝이는 주기 (초)
+  delay: -((i * 0.37) % 3),             // 반짝이는 타이밍을 흩어놓기
+  star: i % 4 === 0,                    // 4개 중 1개는 별(✦), 나머지는 금가루 점
+}));
+
+function Sparkles() {
+  return (
+    <div className="sparkles" aria-hidden="true">
+      {SPARKLES.map((s, i) => (
+        <span
+          key={i}
+          className={s.star ? 'sparkle' : 'sparkle dot'}
+          style={{
+            left: `${s.left}%`,
+            top: `${s.top}%`,
+            width: s.star ? undefined : s.size,
+            height: s.star ? undefined : s.size,
+            fontSize: s.star ? s.size * 2.2 : undefined,
+            animationDuration: `${s.duration}s`,
+            animationDelay: `${s.delay}s`,
+          }}
+        >
+          {s.star ? '✦' : ''}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -146,8 +180,10 @@ function BookApp() {
 
   return (
     <>
+      <Sparkles />
       <Header />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* position + zIndex: 반짝이 장식보다 내용이 위에 오게 */}
+      <Container maxWidth="lg" sx={{ py: 4, position: 'relative', zIndex: 1 }}>
         <Routes>     {/* Routes: 하위 Route 중에 해당되는 것 하나만 골라서 화면에 보여줌 */}
           <Route path="/" element={<HomePage />} />       {/* Route: path(주소)에 따라 element(화면) 보여줌 */}
           <Route
@@ -204,10 +240,9 @@ function Header() {
   return (
     <AppBar position="sticky">
       <Toolbar>
-        <MenuBookIcon sx={{ mr: 1 }} />
         <Typography
           variant="h6"
-          sx={{ flexGrow: 1, fontWeight: 700, cursor: 'pointer' }}
+          sx={{ flexGrow: 1, cursor: 'pointer', whiteSpace: 'nowrap', fontSize: { xs: 18, sm: 22 }, color: GOLD_LIGHT }}
           onClick={() => navigate('/')}
         >
           AI 도서관리
@@ -215,25 +250,25 @@ function Header() {
         <Button
           color="inherit"
           onClick={() => navigate('/')}
-          sx={{ fontWeight: pathname === '/' ? 700 : 400 }}   // 지금 화면이 홈이면 홈 버튼이 굵게 표시되게끔
+          sx={{ fontWeight: pathname === '/' ? 700 : 400, color: pathname === '/' ? GOLD_LIGHT : '#F3E9E4', whiteSpace: 'nowrap', minWidth: 0, px: { xs: 1, sm: 2 } }}   // 지금 화면이 홈이면 홈 버튼이 굵게 표시되게끔
         >
           홈
         </Button>
         <Button
           color="inherit"
           onClick={() => navigate('/books')}
-          sx={{ fontWeight: pathname === '/books' ? 700 : 400 }} 
+          sx={{ fontWeight: pathname === '/books' ? 700 : 400, color: pathname === '/books' ? GOLD_LIGHT : '#F3E9E4', whiteSpace: 'nowrap', minWidth: 0, px: { xs: 1, sm: 2 } }}
         >
           도서 목록
         </Button>
         <Button
           variant="contained"
-          color="secondary"
           startIcon={<AddIcon />}
           onClick={() => navigate('/books/new')}
-          sx={{ ml: 1 }}
+          sx={{ ml: 1, whiteSpace: 'nowrap', px: { xs: 1.5, sm: 2.5 }, bgcolor: GOLD, color: '#2A0A0F', '&:hover': { bgcolor: GOLD_LIGHT } }}
         >
-          새 도서 등록
+          {/* 좁은 화면(모바일)에서는 '등록'만 보이게 */}
+          <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>새 도서&nbsp;</Box>등록
         </Button>
       </Toolbar>
     </AppBar>
@@ -245,7 +280,7 @@ function Header() {
 function Loading() {
   return (
     <Box sx={{ textAlign: 'center', py: 8 }}>
-      <CircularProgress />
+      <CircularProgress sx={{ color: GOLD }} />
     </Box>
   );
 }
@@ -254,8 +289,8 @@ function NotFound() {
   const navigate = useNavigate();
   return (
     <Box sx={{ textAlign: 'center', py: 8 }}>
-      <Typography sx={{ mb: 2 }}>해당 도서를 찾을 수 없습니다.</Typography>
-      <Button variant="outlined" onClick={() => navigate('/books')}>
+      <Typography sx={{ mb: 2, color: '#F3E9E4' }}>해당 도서를 찾을 수 없습니다.</Typography>
+      <Button variant="contained" onClick={() => navigate('/books')}>
         도서 목록으로
       </Button>
     </Box>

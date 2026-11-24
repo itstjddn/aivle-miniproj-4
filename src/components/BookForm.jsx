@@ -51,7 +51,7 @@ export default function BookForm({ initialBook, onSubmit, onCancel }) {
       noValidate
       sx={{ maxWidth: 720, mx: 'auto', p: { xs: 3, md: 5 } }}
     >
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3, textAlign: 'center' }}>
+      <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
         {initialBook ? '도서 수정' : '새 도서 등록'}
       </Typography>
 
