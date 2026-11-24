@@ -14,6 +14,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { generateCover } from '../api/openai';
+import { updateBook } from '../api/books';
 
 //
 // props
@@ -73,6 +74,7 @@ export default function CoverGenerator({ book, onSaved }) {
     try {
       setSaving(true);
       setError('');
+      await updateBook(book.id, {coverImageUrl: imageSrc})
       await onSaved(imageSrc);
       setAppliedMessage('생성된 표지가 도서에 반영되었습니다.');
     } catch (err) {
