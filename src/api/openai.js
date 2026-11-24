@@ -1,8 +1,6 @@
 // OpenAI 표지 생성 함수
-// API 키는 .env 의 VITE_OPENAI_API_KEY 로 읽어옵니다: import.meta.env.VITE_OPENAI_API_KEY
-// 엔드포인트: POST https://api.openai.com/v1/images/generations
 
-// TODO: 도서 제목/내용으로 프롬프트를 만들어 이미지를 생성하고, 이미지(Data URL)를 반환
+// 도서 제목/내용으로 프롬프트를 만들어 이미지를 생성하고, 이미지(Data URL)를 반환
 export async function generateCover(book, userApiKey, selectedQuality) {
 
     // AI 이미지 생성 프롬프트 작성 
@@ -38,16 +36,7 @@ export async function generateCover(book, userApiKey, selectedQuality) {
     // b64_json을 data url 형태로 변환
     const imageSrc = `data:image/png;base64,${b64Json}`;
 
-    // 3. json-server에 coverImageUrl만 PATCH , 바뀔 필드만 body에 담아서 전송.
-    await fetch(`http://localhost:3000/books/${book.id}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            coverImageUrl: imageSrc,
-        }),
-    });
+    
     return imageSrc;
 
 }
