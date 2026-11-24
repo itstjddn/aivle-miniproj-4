@@ -146,15 +146,52 @@ useEffect(() => {
   >
     {/* 배경 위에 표시되는 실제 콘텐츠 영역 */}
     <Box className="universe-content">
-      <MenuBookIcon color="primary" sx={{ fontSize: 64, mb: 2 }} />
 
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-        도서 관리 시스템에 오신 것을 환영합니다!
-      </Typography>
+      {/* 서비스 이름 및 우주 콘셉트 강조 */}
+<Typography
+  sx={{
+    color: '#c4b5fd',
+    letterSpacing: 5,
+    fontSize: 15,
+    fontWeight: 600,
+    mb: 3,
+  }}
+>
+  ✦ BOOK UNIVERSE
+</Typography>
 
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        도서를 등록하고 관리해 보세요. AI가 책 내용에 어울리는 표지도 만들어 드려요.
-      </Typography>
+{/* 메인 제목 */}
+<Typography
+  component="h1"
+  sx={{
+    fontSize: { xs: 32, md: 48 },
+    fontWeight: 700,
+    lineHeight: 1.4,
+    color: '#f5f3ff',
+    mb: 3,
+
+    // 글자 주변에 은은한 보라색 발광 효과
+    textShadow: '0 0 20px rgba(167, 139, 250, 0.6)',
+  }}
+>
+  당신의 이야기가
+  <br />
+  하나의 별이 되는 곳
+</Typography>
+
+{/* 서비스 소개 문구 */}
+<Typography
+  sx={{
+    fontSize: 18,
+    color: '#d1cce5',
+    lineHeight: 1.8,
+    mb: 4,
+  }}
+>
+  AI와 함께 상상을 책으로 만들어 보세요.
+  <br />
+  한 권의 책이 모여 당신만의 우주를 완성합니다.
+</Typography>
 
       {/* 메인 화면 버튼 영역 */}
 <Stack
@@ -229,14 +266,25 @@ useEffect(() => {
 {/* 홈 화면 도서 컬렉션 영역 */}
 <Box sx={{ mt: 8, textAlign: 'left' }}>
 
-  {/* 컬렉션 제목 */}
-  <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-    나의 책 컬렉션
-  </Typography>
+  {/* 도서 컬렉션 제목 */}
+<Typography
+  variant="h5"
+  sx={{
+    fontWeight: 700,
+    color: '#e9ddff',
+    mb: 1,
 
-  <Typography color="text.secondary" sx={{ mb: 3 }}>
-    내가 만든 이야기들을 만나보세요.
-  </Typography>
+    // 제목에 은은한 보라색 발광 효과 적용
+    textShadow: '0 0 15px rgba(167, 139, 250, 0.6)',
+  }}
+>
+  ✦ 나의 작은 우주
+</Typography>
+
+{/* 도서 컬렉션 소개 문구 */}
+<Typography sx={{ color: '#c4bddb', mb: 3 }}>
+  한 권씩 채워가는 나만의 이야기
+</Typography>
 
   {/* 등록된 도서가 없는 경우 안내 문구 표시 */}
   {books.length === 0 ? (
