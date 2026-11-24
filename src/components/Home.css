@@ -1,0 +1,116 @@
+/* 홈 화면 전체 우주 배경 */
+.universe-home {
+  position: relative;
+  min-height: 100vh;
+  background-color: #090b24;
+
+  /* 화면 크기에 맞게 배경 이미지 표시 */
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* 배경 위에 어두운 효과를 추가하여 글자 가독성 확보 */
+.universe-home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(9, 11, 36, 0.05) 0%,
+    rgba(9, 11, 36, 0.1) 45%,
+    rgba(9, 11, 36, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+/* 실제 화면 콘텐츠 영역 */
+.universe-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+/* 작은 화면에서 여백 조정 */
+@media (max-width: 600px) {
+  .universe-content {
+    padding: 40px 16px;
+  }
+
+  .universe-home {
+    background-position: 35% top;
+  }
+}
+
+/* ========================================
+   도서 슬라이드 좌우 화살표 공통 디자인
+======================================== */
+
+.universe-home .carousel-arrow {
+
+  /* 버튼 크기 및 원형 모양 설정 */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  /* 화면 공간이 부족해도 버튼 크기 유지 */
+  flex-shrink: 0;
+
+  /* 어두운 우주 배경에서도 잘 보이도록 흰색 적용 */
+  color: #ffffff;
+
+  /* 반투명 보라색 배경 적용 */
+  background-color: rgba(139, 92, 246, 0.2);
+
+  /* 버튼 뒤쪽 배경을 흐리게 하여 유리 효과 구현 */
+  backdrop-filter: blur(10px);
+
+  /* 연한 보라색 테두리 적용 */
+  border: 1px solid rgba(196, 181, 253, 0.8);
+
+  /* 버튼 주변에 보라색 네온 발광 효과 적용 */
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+
+  /* 색상과 크기가 부드럽게 변경되도록 설정 */
+  transition: all 0.3s ease;
+}
+
+
+/* ========================================
+   마우스를 화살표 위에 올렸을 때
+======================================== */
+
+.universe-home .carousel-arrow:hover {
+
+  /* 배경의 보라색을 더욱 선명하게 변경 */
+  background-color: rgba(139, 92, 246, 0.5);
+
+  /* 네온 발광 효과 강화 */
+  box-shadow: 0 0 25px rgba(167, 139, 250, 0.9);
+
+  /* 버튼 크기를 기존보다 10% 확대 */
+  transform: scale(1.1);
+}
+
+
+/* ========================================
+   화살표 버튼이 비활성화되었을 때
+======================================== */
+
+.universe-home .carousel-arrow.Mui-disabled {
+
+  /* 화살표 색상을 흐리게 변경 */
+  color: rgba(255, 255, 255, 0.3);
+
+  /* 버튼 전체 투명도 조절 */
+  opacity: 0.4;
+
+  /* 네온 발광 효과 제거 */
+  box-shadow: none;
+}

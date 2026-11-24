@@ -46,9 +46,16 @@ export default function App() {
 
 // ──────────────── CRUD 기능 & 라우팅 ──────────────────────
 function BookApp() {
+
   const navigate = useNavigate();
+
+  // 현재 페이지의 URL 경로 확인
+  const { pathname } = useLocation();
+  // 현재 페이지가 홈 화면인지 확인
+  const isHome = pathname === '/';
+
   const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);   // 처음 목록을 불러오는 중인지
+  const [loading, setLoading] = useState(true);
 
   // 스낵바 (성공/실패 ui)
   const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
@@ -146,10 +153,18 @@ function BookApp() {
 
   return (
     <>
-      <Header />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Routes>     {/* Routes: 하위 Route 중에 해당되는 것 하나만 골라서 화면에 보여줌 */}
-          <Route path="/" element={<HomePage />} />       {/* Route: path(주소)에 따라 element(화면) 보여줌 */}
+    <Header />
+
+    {/* 홈 화면에서만 최대 너비 제한 및 여백 제거 */}
+    <Container
+      maxWidth={isHome ? false : 'lg'}
+      disableGutters={isHome}
+      sx={{
+        py: isHome ? 0 : 4,
+      }}
+    >
+          <Routes>    {/* Routes: 하위 Route 중에 해당되는 것 하나만 골라서 화면에 보여줌 */}
+          <Route path="/" element={<HomePage books={books} />} />       {/* 홈 화면에서도 등록된 도서 목록을 사용할 수 있도록 books 전달 */}
           <Route
             path="/books"
             element={<ListPage books={books} loading={loading} />}
@@ -198,43 +213,109 @@ function BookApp() {
 
 // ───────────────── 상단 헤더 ─────────────────
 function Header() {
-  const navigate = useNavigate();      // 화면 이동 함수
-  const { pathname } = useLocation();  // 지금 주소 (예: '/books/3')   // useLocation() 객체에서 pathname만 구조 분해 할당으로 꺼냄
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
-    <AppBar position="sticky">
-      <Toolbar>
-        <MenuBookIcon sx={{ mr: 1 }} />
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        // 딥네이비 반투명 배경
+        background: 'rgba(9, 11, 36, 0.95)',
+        backdropFilter: 'blur(15px)',
+
+        // 보라색 테두리와 은은한 빛 효과
+        borderBottom: '1px solid rgba(167, 139, 250, 0.35)',
+        boxShadow: '0 0 20px rgba(139, 92, 246, 0.2)',
+      }}
+    >
+      <Toolbar sx={{ minHeight: 70 }}>
+
+        {/* 서비스 로고 아이콘 */}
+        <MenuBookIcon
+          sx={{
+            mr: 1.5,
+            fontSize: 30,
+            color: '#c4b5fd',
+            filter: 'drop-shadow(0 0 8px #a78bfa)',
+          }}
+        />
+
+        {/* 서비스 이름 */}
         <Typography
           variant="h6"
-          sx={{ flexGrow: 1, fontWeight: 700, cursor: 'pointer' }}
           onClick={() => navigate('/')}
+          sx={{
+            flexGrow: 1,
+            fontWeight: 700,
+            cursor: 'pointer',
+            letterSpacing: 2,
+            color: '#e9ddff',
+            textShadow: '0 0 12px #8b5cf6',
+          }}
         >
-          AI 도서관리
+          BOOK UNIVERSE
         </Typography>
+
+        {/* 홈 이동 버튼 */}
         <Button
-          color="inherit"
           onClick={() => navigate('/')}
-          sx={{ fontWeight: pathname === '/' ? 700 : 400 }}   // 지금 화면이 홈이면 홈 버튼이 굵게 표시되게끔
+          sx={{
+            mx: 1,
+            color: pathname === '/' ? '#ffffff' : '#b8b0d0',
+            fontWeight: pathname === '/' ? 700 : 400,
+            '&:hover': {
+              color: '#ffffff',
+              backgroundColor: 'rgba(167, 139, 250, 0.1)',
+            },
+          }}
         >
           홈
         </Button>
+
+        {/* 도서 목록 이동 버튼 */}
         <Button
-          color="inherit"
           onClick={() => navigate('/books')}
-          sx={{ fontWeight: pathname === '/books' ? 700 : 400 }} 
+          sx={{
+            mx: 1,
+            color: pathname === '/books' ? '#ffffff' : '#b8b0d0',
+            fontWeight: pathname === '/books' ? 700 : 400,
+            '&:hover': {
+              color: '#ffffff',
+              backgroundColor: 'rgba(167, 139, 250, 0.1)',
+            },
+          }}
         >
-          도서 목록
+          내 서재
         </Button>
+
+        {/* 신규 도서 등록 버튼 */}
         <Button
           variant="contained"
-          color="secondary"
           startIcon={<AddIcon />}
           onClick={() => navigate('/books/new')}
-          sx={{ ml: 1 }}
+          sx={{
+            ml: 2,
+            px: 3,
+            py: 1,
+            borderRadius: 10,
+            color: '#ffffff',
+            background: 'linear-gradient(135deg, #9333ea, #6366f1)',
+            boxShadow: '0 0 15px rgba(139, 92, 246, 0.5)',
+            transition: 'all 0.3s',
+
+            // 마우스를 올렸을 때 네온 효과 강화
+            '&:hover': {
+              background: 'linear-gradient(135deg, #a855f7, #818cf8)',
+              boxShadow: '0 0 25px rgba(139, 92, 246, 0.8)',
+              transform: 'translateY(-2px)',
+            },
+          }}
         >
-          새 도서 등록
+          새 책 만들기
         </Button>
+
       </Toolbar>
     </AppBar>
   );
@@ -266,12 +347,17 @@ function NotFound() {
 // ───────────────── 페이지들 ─────────────────
 // 각 페이지는 주소에서 id를 꺼내고, 컴포넌트에 props로 넘겨주는 역할만 함
 
-function HomePage() {
+// 홈 화면에서 사용할 도서 목록을 props로 전달받음
+function HomePage({ books }) {
   const navigate = useNavigate();
   return (
     <Home
+      books={books}  // Home 컴포넌트에 전체 도서 목록 전달
       onGoList={() => navigate('/books')}          // 도서 목록 보기
       onGoCreate={() => navigate('/books/new')}    // 새 도서 등록
+
+      // 선택한 도서의 ID를 이용하여 상세 페이지로 이동
+      onGoDetail={(id) => navigate(`/books/${id}`)}
     />
   );
 }
